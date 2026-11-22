@@ -143,7 +143,7 @@ def transfer_captain(conn, team_id, new_captain_id, requested_by):
 
 
 def team_detail(conn, team_id):
-    team = get_team(conn, team_id)
+    team = get_team_or_404(conn, team_id)
     team["members"] = list_members(conn, team["id"])
     team["submission"] = db.fetch_one(
         conn, "SELECT id, title, submitted_at FROM submissions WHERE team_id = ?", (team_id,)
