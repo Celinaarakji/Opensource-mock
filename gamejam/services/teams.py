@@ -108,7 +108,7 @@ def add_member(conn, team_id, user, added_by):
         raise Forbidden("Only the team captain can add members")
     if user_team_in_jam(conn, team["jam_id"], user["id"]):
         raise Conflict("That user is already on a team in this jam")
-    if member_count(conn, team_id) > jam["max_team_size"]:
+    if member_count(conn, team_id) >= jam["max_team_size"]:
         raise BadRequest(f"Teams in this jam can have at most {jam['max_team_size']} members")
     conn.execute(
         "INSERT INTO team_members (team_id, user_id, joined_at) VALUES (?, ?, ?)",
