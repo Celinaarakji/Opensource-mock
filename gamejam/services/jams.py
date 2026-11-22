@@ -3,7 +3,7 @@
 from gamejam import config, db
 from gamejam.errors import BadRequest, Conflict, NotFound
 from gamejam.utils.text import slugify
-from gamejam.utils.time import now_iso
+from gamejam.utils.time import humanize_delta, is_past_deadline, now_iso, time_left
 from gamejam.validation import validate_criterion, validate_jam
 
 # Which status a jam may move to from each status.
@@ -130,4 +130,6 @@ def jam_detail(conn, jam_id):
     jam["team_count"] = conn.execute(
         "SELECT COUNT(*) FROM teams WHERE jam_id = ?", (jam_id,)
     ).fetchone()[0]
+    jam["time_left"] = humanize_delta(time_left(jam["deadline"]))
+    jam["is_past_deadline"] = is_past_deadline(jam["deadline"])
     return jam
