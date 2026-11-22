@@ -85,6 +85,18 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(self.api.get("/jams/2/leaderboard", as_user="alex_org")[0], 200)
         self.assertEqual(self.api.get("/jams/1/leaderboard")[0], 200)
 
+    def test_leaderboard_criterion_averages_keep_decimals(self):
+        """A judge average of (8 + 7) / 2 must stay 7.5, not truncate to 7.0."""
+        _, jam = self.api.get("/jams/1")
+        fun_id = str(next(c["id"] for c in jam["criteria"] if c["name"] == "Fun"))
+        theme_id = str(next(c["id"] for c in jam["criteria"] if c["name"] == "Theme"))
+
+        status, body = self.api.get("/jams/1/leaderboard")
+        self.assertEqual(status, 200)
+        pixel = next(e for e in body if e["team_name"] == "Pixel Pirates")
+        self.assertEqual(pixel["criteria"][fun_id], 7.5)
+        self.assertEqual(pixel["criteria"][theme_id], 8.5)
+
     def test_teams_csv(self):
         self.assertEqual(self.api.get("/jams/1/teams.csv", as_user="sam")[0], 403)
         status, body = self.api.get("/jams/1/teams.csv", as_user="alex_org")
