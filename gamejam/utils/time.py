@@ -41,7 +41,9 @@ def parse_datetime(value):
         except ValueError as exc:
             raise ValueError(f"Not a valid ISO 8601 datetime: {value!r}") from exc
     # Normalise everything to UTC so comparisons are easy.
-    return dt.replace(tzinfo=timezone.utc)
+    if dt.tzinfo is None:
+        dt = dt.replace(tzinfo=timezone.utc)
+    return dt.astimezone(timezone.utc)
 
 
 def parse_deadline(value):

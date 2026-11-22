@@ -70,6 +70,8 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(body["team_count"], 5)
         self.assertEqual(len(body["criteria"]), 3)
+        self.assertIn("time_left", body)
+        self.assertIn("is_past_deadline", body)
 
     def test_jam_by_slug(self):
         self.assertEqual(self.api.get("/jams/by-slug/spring-mini-jam-2027")[1]["id"], 2)
