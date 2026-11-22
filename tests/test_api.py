@@ -80,6 +80,11 @@ class ApiTests(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(len(body["members"]), 2)
 
+    def test_unknown_team_returns_not_found(self):
+        status, body = self.api.get("/teams/999")
+        self.assertEqual(status, 404)
+        self.assertEqual(body, {"error": "Team 999 not found"})
+
     def test_leaderboard_hidden_until_closed(self):
         self.assertEqual(self.api.get("/jams/2/leaderboard")[0], 403)
         self.assertEqual(self.api.get("/jams/2/leaderboard", as_user="alex_org")[0], 200)
