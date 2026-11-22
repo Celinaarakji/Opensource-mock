@@ -16,7 +16,7 @@ from gamejam.utils.formatting import round_score
 def _average(values):
     if not values:
         return None
-    return sum(values) // len(values)
+    return sum(values) / len(values)
 
 
 def _weighted(criterion_averages, weights):
